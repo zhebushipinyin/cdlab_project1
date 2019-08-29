@@ -102,7 +102,7 @@ for i in range(len(trial_set)):
         # sure_reward & response
         for each in sure_reward:
             # text_gamble2.text = "%s%%，￥%s  %s%%，￥%s" % (int(100 * p_v), int(x1), int(100*(1 - p_v)), int(x2))
-            text_gamble2.text = 'Gamble'
+            text_gamble2.text = '奖券'
             text_reward.text = "￥%s" % int(each)
             text_gamble2.draw()
             text_reward.draw()
