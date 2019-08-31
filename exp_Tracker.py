@@ -52,7 +52,8 @@ for i in range(len(p)):
     np.random.shuffle(item[i])  # 打乱每个p下的项目
 # 打乱总体
 np.random.shuffle(item)
-block = [[0] * 33] * 5
+# 不要写[[0]*33]*5，这样赋值时会出错
+block = [[0] * 33 for _ in range(5)]
 # 每个block 33个trial 11（p）* 3(x1 x2)
 for i in range(5):
     for j in range(11):
@@ -91,6 +92,7 @@ RIGHT_EYE = 1
 LEFT_EYE = 0
 BINOCULAR = 2
 
+# eyelinktracker = EyeLink(trackeraddress=None)
 eyelinktracker = EyeLink()
 # 眼动仪
 pylink.openGraphics((w, h), 32)
@@ -159,7 +161,7 @@ event.waitKeys(keyList=['space'])
 event.clearEvents()
 
 # 开始记录眼动数据
-getEYELINK().startRecording(0, 1, 0, 1)
+getEYELINK().startRecording(1, 1, 1, 1)
 # 如果记录的是双眼的数据则改为记录左眼；
 eye_used = getEYELINK().eyeAvailable()
 if eye_used == RIGHT_EYE:
@@ -227,7 +229,7 @@ for i in range(len(trial_set)):
             result['id'].append(k)
             result['is_right'].append(is_right)
             result['reward'].append(each)
-            text_gamble.text = '赌局'
+            text_gamble.text = '奖券'
             text_reward.text = "￥%s" % int(each)
             text_gamble.draw()
             text_reward.draw()
