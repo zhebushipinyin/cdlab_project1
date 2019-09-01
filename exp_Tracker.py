@@ -65,8 +65,8 @@ for i in range(5):
 sure_asignment = np.random.randint(0, 2, size=(5, 33))
 # 刺激位置，0gamble左, 1右
 gamble_pos = np.random.randint(0, 2, size=(5, 33))
-part2 = [[0] * 33] * 5
-part1 = [[0] * 33] * 5
+part2 = [[0] * 33 for _ in range(5)]
+part1 = [[0] * 33 for _ in range(5)]
 sur = [0, 1]
 for i in range(5):
     for j in range(33):
