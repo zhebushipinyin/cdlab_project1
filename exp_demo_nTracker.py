@@ -22,7 +22,7 @@ for i in range(len(p)):
     np.random.shuffle(item[i])  # 打乱每个p下的项目
 # 打乱总体
 np.random.shuffle(item)
-block = [[0] * 33] * 5
+block = [[0] * 33 for _ in range(5)]
 # 每个block 33个trial 11（p）* 3(x1 x2)
 for i in range(5):
     for j in range(11):
@@ -32,8 +32,8 @@ for i in range(5):
     np.random.shuffle(block[i])
 # 分配8个sure_reward （间隔分配）
 sure_asignment = np.random.randint(0, 2, size=(5, 33))
-part2 = [[0] * 33] * 5
-part1 = [[0] * 33] * 5
+part2 = [[0] * 33 for _ in range(5)]
+part1 = [[0] * 33 for _ in range(5)]
 sur = [0, 1]
 for i in range(5):
     for j in range(33):

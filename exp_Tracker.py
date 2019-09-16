@@ -239,7 +239,6 @@ for i in range(len(trial_set)):
             getEYELINK().sendMessage('Reward %s begin' % int(each))
             key = event.waitKeys(keyList=['space', 'f', 'j', 'escape'], maxWait=3)
             rt = clk.getTime()
-            result['reaction_time'].append(rt)
             if not key:
                 getEYELINK().sendMessage("TRIAL ABORTED")
                 result['choose_gamble'].append(-1)
