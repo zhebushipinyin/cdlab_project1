@@ -4,15 +4,43 @@
 from psychopy import visual, core, event, gui
 import pandas as pd
 import numpy as np
-import random
+import random, tkinter
 
 
 data = pd.read_csv('nback_%s.csv' % (random.randint(1, 2)))
 data['RT'] = data['RT'].astype('float')
-
-(w, h) = (1280, 720)
+# gui
+myDlg = gui.Dlg(title="Nback实验")
+myDlg.addText('被试信息')
+myDlg.addField('姓名:')
+ok_data = myDlg.show()  # show dialog and wait for OK or Cancel
+window = tkinter.Tk()
+(w, h) = (1920, 1080)
+w = window.winfo_screenwidth()
+h = window.winfo_screenheight()
 win = visual.Window(size=(w, h), fullscr=True, units='pix', color=[0, 0, 0])
-M_text = visual.TextStim(win, height=64*h/720)
+myMouse = event.Mouse()
+myMouse.setVisible(0)
+M_text = visual.TextStim(win, height=80*h/720)
+# 指导语
+pic = visual.ImageStim(win, image="dot.png", size=(w, h))
+# 指导语
+while True:
+    for i in range(5):
+        pic.image = 'pic/Nback_%s.png'%i
+        pic.draw()
+        win.flip()
+        event.waitKeys(keyList=['space'])
+        event.clearEvents()
+    M_text.text = '按【空格键】进入N-back实验'
+    M_text.draw()
+    win.flip()
+    key = event.waitKeys(keyList=['space', 'escape'])
+    if 'space' in key:
+        event.clearEvents()
+        break
+    event.clearEvents()
+
 ISI = core.StaticPeriod(screenHz=60)
 ISI.start(1)  # start a period of 0.5s
 ISI.complete()
@@ -21,7 +49,7 @@ clk = core.Clock()
 # 重复四次
 for i in range(4):
     # 四个game block
-    if i == 2:
+    if i in [1, 2, 3]:
         M_text.text = '请休息，按空格键继续'
         M_text.draw()
         win.flip()
@@ -33,7 +61,7 @@ for i in range(4):
             index = 52*i + 13*j + k
             M_text.color = [1, 1, 1]
             if data['trial'][index] == 1:
-                M_text.text = '%s Back' % data['item'][index]
+                M_text.text = '%s-Back' % data['item'][index]
                 M_text.draw()
                 win.flip()
                 core.wait(4)
@@ -62,7 +90,7 @@ for i in range(4):
                         win.close()
                         core.quit()
                     elif ('f' in key[-1][0])or('j' in key[-1][0]):
-                        M_text.color = [0, 1, 0]
+                        # M_text.color = [0, 1, 0]
                         flag = 1
                         data['RT'][index] = t
                         print(t)
@@ -72,4 +100,4 @@ for i in range(4):
                                 data['score'][index] = 1
                         else:
                             data['response'][index] = 0
-data.to_csv('exp_data/a.csv')
+data.to_csv('exp_data/Nback_%s.csv'%ok_data[0])

@@ -71,7 +71,7 @@ for i in range(5):
         v_x2 = block[i][j][2]
         sur = [block[i][j][x] for x in [3, 4, 5, 6, 7, 8, 9, 10]]
         np.random.shuffle(sur)
-        pos_gamble = np.concatenate((gamble_pos[i][j], np.flipud(gamble_pos[i][j])))
+        pos_gamble = np.concatenate((gamble_pos[i][j], 1-np.flipud(gamble_pos[i][j])))
         trial_set[i][j] = {'p': p_value, 'v': (v_x1, v_x2), 'sure_reward': sur, 'gamble_pos': pos_gamble}
 
 # 最终数据格式： 5(block)*33(trial)
@@ -82,8 +82,8 @@ RIGHT_EYE = 1
 LEFT_EYE = 0
 BINOCULAR = 2
 
-eyelinktracker = EyeLink(trackeraddress=None)
-# eyelinktracker = EyeLink()
+# eyelinktracker = EyeLink(trackeraddress=None)
+eyelinktracker = EyeLink()
 # 眼动仪
 pylink.openGraphics((w, h), 32)
 # Opens the EDF file.
@@ -103,7 +103,7 @@ getEYELINK().setFileEventFilter("LEFT,RIGHT,FIXATION,SACCADE,BLINK,MESSAGE,BUTTO
 getEYELINK().setFileSampleFilter("LEFT,RIGHT,GAZE,AREA,GAZERES,STATUS")
 getEYELINK().setLinkEventFilter("LEFT,RIGHT,FIXATION,SACCADE,BLINK,BUTTON")
 getEYELINK().setLinkSampleFilter("LEFT,RIGHT,GAZE,GAZERES,AREA,STATUS")
-EYELINK.sendCommand("pupil_size_diameter = True");
+getEYELINK().sendCommand("pupil_size_diameter = True");
 pylink.setCalibrationColors((255, 255, 255), (0, 0, 0))  # Sets the calibration target and background color
 pylink.setTargetSize(int(w / 70), int(w / 300))
 # select best size for calibration target
@@ -144,15 +144,33 @@ text_p = visual.TextStim(win, height=64 * h / 720)
 txt = visual.TextStim(win, height=64 * h / 720)
 # 注视点
 fix = visual.ImageStim(win, image="dot.png", size=64)
+# 指导语
+pic = visual.ImageStim(win, image="dot.png", size=(w, h))
 # 开始屏
 txt.text = '按【空格键】开始实验'
 txt.draw()
 win.flip()
 event.waitKeys(keyList=['space'])
 event.clearEvents()
-
+# 指导语
+while True:
+    for i in range(3):
+        pic.image = 'pic/introduction_%s'%(i+1)
+        pic.draw()
+        win.flip()
+        event.waitKeys(keyList=['space'])
+        event.clearEvents()
+    txt.text = '按【空格键】进入决策实验'
+    txt.draw()
+    win.flip()
+    key = event.waitKeys(keyList=['space', 'escape'])
+    if 'space' in key:
+        event.clearEvents()
+        break
+    event.clearEvents()
 clk = core.Clock()
 for i in range(len(trial_set)):
+    myMouse.setVisible(0)
     for j in range(33):
         # 开始记录眼动数据
         getEYELINK().startRecording(1, 1, 1, 1)
@@ -302,26 +320,7 @@ for i in range(len(trial_set)):
         if 'escape' in key:
             break
         elif 'space' in key:
-            win.close()
-            openGraphics()
-            if getEYELINK().isConnected() and not getEYELINK().breakPressed():
-                print('连接成功')
-                getEYELINK().doTrackerSetup()
-                while True:
-                    try:
-                        error = getEYELINK().doDriftCorrect(w // 2, h // 2, 1, 1)
-                        if error != 27:
-                            break
-                        else:
-                            getEYELINK().doTrackerSetup()
-                    except:
-                        getEYELINK().doTrackerSetup()
-            else:
-                print('NO')
-                getEYELINK().close()
-                closeGraphics()
-            win = visual.Window(size=(w, h), fullscr=True, units='pix', color=[0, 0, 0])
-            closeGraphics()
+            pass
 
 if getEYELINK() != None:
     # File transfer and cleanup!
