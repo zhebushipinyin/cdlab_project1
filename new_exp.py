@@ -10,7 +10,7 @@ from pylink import *
 import pylink
 
 # 打开端口
-# parallel.setPortAddress(49408)
+parallel.setPortAddress(49408)
 
 p = np.array([0.01, 0.05, 0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9, 0.95, 0.99])
 money = np.array([(25, 0), (50, 0), (75, 0), (100, 0), (150, 0), (200, 0), (400, 0), (800, 0),
@@ -311,7 +311,7 @@ txt.draw()
 win.flip()
 event.waitKeys(keyList=['space'])
 event.clearEvents()
-# parallel.setData(0)
+parallel.setData(0)
 myMouse = event.Mouse()
 myMouse.setVisible(0)
 # 开始
@@ -347,9 +347,9 @@ for ii in range(5):
         getEYELINK().sendMessage(msg)
         cmd = data.loc[(data.p == p_v) & (data.x1 == x) & (data.x2 == y)].index[0] + 4
         # 发送信号
-        # parallel.setData(int(cmd))
+        parallel.setData(int(cmd))
         core.wait(0.1)
-        # parallel.setData(0)
+        parallel.setData(0)
         result['p'].append(p_v)
         result['1-p'].append(1-p_v)
         result['x'].append(x)
@@ -367,10 +367,10 @@ for ii in range(5):
         text_p.draw()
         win.flip()
         # 发送信号-概率
-        # parallel.setData(1)
+        parallel.setData(1)
         getEYELINK().sendMessage('Probability p:%s, n:%s' % (p_v, tr))
         core.wait(random.randrange(30, 41, step=1) / 100.)
-        # parallel.setData(0)
+        parallel.setData(0)
         win.flip()
         core.wait(0.2)
         # 随机金额对位置
@@ -386,17 +386,17 @@ for ii in range(5):
         text_gamble_2.draw()
         win.flip()
         # 发送信号-金额
-        # parallel.setData(2)
+        parallel.setData(2)
         getEYELINK().sendMessage('Value x:%s, y:%s, n:%s' % (int(x), int(y), tr))
         core.wait(3)
-        # parallel.setData(0)
+        parallel.setData(0)
         win.flip()
         core.wait(0.2)
         # 选择
         myMouse.setVisible(1)
         for flag in range(2):
             # 发送信号-选择
-            # parallel.setData(3)
+            parallel.setData(3)
             getEYELINK().sendMessage('Reward %s begin' % flag)
             # 建立确定金额阵列
             col = [0]*2
@@ -508,12 +508,12 @@ for ii in range(5):
                     core.quit()
             win.flip()
             myMouse.setVisible(0)
-            # parallel.setData(0)
+            parallel.setData(0)
             getEYELINK().sendMessage("Reward %s end"%flag)
             result['RT'].append(rt)
             core.wait(0.5)
         # trial结束
-        # parallel.setData(250)
+        parallel.setData(250)
         # 本次trial结束
         getEYELINK().sendMessage("TRIALID p:%s, x:%s, y:%s, n:%s end" % (p_v, x, y, tr))
         ret_value = getEYELINK().getRecordingStatus()
