@@ -103,7 +103,7 @@ else:
     closeGraphics()
 
 win = visual.Window(size=(w, h), fullscr=True, units='pix', color=[0, 0, 0])
-
+closeGraphics()
 card_pos = [[0 for i in range(3)]for i in range(7)]
 table = [[0 for i in range(3)]for i in range(7)]
 value = [[0 for i in range(3)]for i in range(7)]
@@ -230,78 +230,82 @@ for ii in range(5):
             state = 'running'
             value = [[0 for i in range(3)] for i in range(7)]
             while True:
-                if state == 'running':
-                    for i in range(1, 7):
-                        for j in range(2):
-                            if table[i][j].contains(myMouse) and value[i][j] == 0:
-                                table[i][j].fillColor = [0, 1, 0]
-                                table[i][j].opacity = 0.3
-                            elif value[i][j] == 0:
-                                table[i][j].opacity = 1
-                                table[i][j].fillColor = [0., 0., 0.]
-                            else:
-                                table[i][j].fillColor = [0, 1, 0]
-                                table[i][j].opacity = 0.8
-                            if myMouse.isPressedIn(table[i][j]) and value[i][j] == 0:
-                                value[i] = [0]*3
-                                value[i][j] = 1
-                                table[i][j].fillColor = [0, 1, 0]
-                                table[i][j].opacity = 0.8
-                            table[i][j].draw()
-                    for j in range(3):
-                        table[0][j].draw()
-                    for i in range(7):
-                        table[i][2].draw()
-                    for i in range(4):
-                        title[i].draw()
-                    table_jiangquan.draw()
-                    table_p.draw()
-                    ticket.draw()
-                    for i in range(6):
-                        sure_reward[i].text = u"%s元"%col_p[i]
-                        sure_reward[i].height = h/36
-                        sure_reward[i].draw()
-                    key = event.getKeys(["escape"])
-                    if "escape" in key:
-                        state = "exit"
-                    check = [0]*(7-1)
-                    now = [0]*(7-1)
-                    point = 0
-                    for i in range(1, 7):
-                        point += value[i][0]+value[i][1]
-                        if value[i][1] == 1:
-                            now[i-1] = 1
-                    j = 0
-                    while j <= 5:
-                        if value[j+1][1] == 1:
-                            check[j] = 1
-                        else:
-                            break
-                        j += 1
-                    if check == now and point == 6 and check[5] + check[0] == 1:
-                        if ok_shape.contains(myMouse):
-                            ok_shape.fillColor = [0, 1, 0]
-                            ok_shape.opacity = 0.4
-                        else:
-                            ok_shape.fillColor = [0, 0, 0]
-                            ok_shape.opacity = 1
-                        ok_shape.draw()
-                        ok.draw()
-                    win.flip()
-                    if check == now and myMouse.isPressedIn(ok_shape):
-                        change = sum(check)
-                        x1 = col_p[change-1]
-                        y1 = col_p[change]
-                        state = "quit"
-                if state == "quit":
-                    win.flip()
-                    break
-                if state == "exit":
-                    win.flip()
-                    win.close()
-                    core.quit()
-            win.flip()
-            core.wait(0.5)
+                            if state == 'running':
+                                for i in range(1, 7):
+                                    for j in range(2):
+                                        if table[i][j].contains(myMouse) and value[i][j] == 0:
+                                            pass
+                                        elif value[i][j] == 0:
+                                            pass
+                                        else:
+                                            dui.pos = gou_pos[i][j]
+                                            dui.draw()
+                                        if myMouse.isPressedIn(table[i][j]) and value[i][j] == 0:
+                                            value[i] = [0]*3
+                                            value[i][j] = 1
+                                            dui.pos = gou_pos[i][j]
+                                            dui.draw()
+                                        table[i][j].draw()
+                                for j in range(3):
+                                    table[0][j].draw()
+                                for i in range(7):
+                                    table[i][2].draw()
+                                for i in range(4):
+                                    title[i].draw()
+                                table_jiangquan.draw()
+                                table_p.draw()
+                                ticket.draw()
+                                for i in range(6):
+                                    sure_reward[i].text = u"%s元"%int(col_p[i])
+                                    sure_reward[i].height = h/36
+                                    sure_reward[i].draw()
+                                key = event.getKeys(["escape"])
+                                if "escape" in key:
+                                    state = "exit"
+                                check = [0]*(7-1)
+                                now = [0]*(7-1)
+                                point = 0
+                                for i in range(1, 7):
+                                    point += value[i][0]+value[i][1]
+                                    if value[i][1] == 1:
+                                        now[i-1] = 1
+                                j = 0
+                                while j <= 5:
+                                    if value[j+1][1] == 1:
+                                        check[j] = 1
+                                    else:
+                                        break
+                                    j += 1
+                                if check == now and point == 6 and check[5] + check[0] == 1:
+                                    if ok_shape.contains(myMouse):
+                                        ok_shape.fillColor = [-1, -1, -1]
+                                        ok_shape.opacity = 0.3
+                                    else:
+                                        ok_shape.fillColor = [0, 0, 0]
+                                        ok_shape.opacity = 1
+                                    ok_shape.draw()
+                                    ok.draw()
+                                win.flip()
+                                # 获得被试所选转折点
+                                if check == now and myMouse.isPressedIn(ok_shape):
+                                    change = sum(check)
+                                    x1 = col_p[change-1]
+                                    y1 = col_p[change]
+                                    # 标记为第二轮
+                                    state = "quit"
+                            # 进入下一层
+                            if state == "quit":
+                                win.flip()
+                                break
+                            # 强行终止
+                            if state == "exit":
+                                win.flip()
+                                win.close()
+                                core.quit()
+                        win.flip()
+                        if flag == 1:
+                            myMouse.setVisible(0)
+                        core.wait(0.5)
         # trial结束
         core.wait(random.randrange(20, 41, step=1) / 10. - 0.5)
 
@@ -369,7 +373,7 @@ for ii in range(5):
         # 发送信号-概率
         # parallel.setData(1)
         getEYELINK().sendMessage('Probability p:%s, n:%s' % (p_v, tr))
-        core.wait(random.randrange(30, 41, step=1) / 100.)
+        core.wait(random.randrange(60, 81, step=1) / 20.)
         # parallel.setData(0)
         win.flip()
         core.wait(0.2)
@@ -422,7 +426,7 @@ for ii in range(5):
                             if myMouse.isPressedIn(table[i][j]) and value[i][j] == 0:
                                 clk_data['rt'].append(clk2.getTime())
                                 clk_data['gamble'].append(i)
-                                clk_data['reward'].append(col_p[i])
+                                clk_data['reward'].append(col_p[i-1])
                                 clk_data['y'].append(j)
                                 clk_data['p'].append(p_v)
                                 clk_data['x1'].append(x)
@@ -511,6 +515,8 @@ for ii in range(5):
             # parallel.setData(0)
             getEYELINK().sendMessage("Reward %s end"%flag)
             result['RT'].append(rt)
+            if flag == 1:
+                myMouse.setVisible(0)
             core.wait(0.5)
         # trial结束
         # parallel.setData(250)
