@@ -64,7 +64,7 @@ if ok_data[3] == 'block1':
             trial_data['p'].append(block[i][j][0])
             trial_data['x1'].append(block[i][j][1])
             trial_data['x2'].append(block[i][j][2])
-            trial_data['block'].append('block%s' % i)
+            trial_data['block'].append('block%s' % (i+1))
 
     df1 = pd.DataFrame(trial_data)
     df1.to_csv('trial_data.csv')
