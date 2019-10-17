@@ -169,6 +169,7 @@ text_gamble_1 = visual.TextStim(win, height=64 * h / 720, pos=(int(-150*w/1024),
 text_gamble_2 = visual.TextStim(win, height=64 * h / 720, pos=(int(150*w/1024), 0))
 text_p = visual.TextStim(win, height=64 * h / 720)
 txt = visual.TextStim(win, height=64 * h / 720)
+text_chaoshi = visual.TextStim(win, height=64 * h / 720)
 # 注视点
 fix = visual.ImageStim(win, image="dot.png", size=64 * h / 720)
 # 指导语
@@ -179,6 +180,7 @@ ticket = visual.TextStim(win)
 ticket.text = u"奖券"
 ticket.pos = (-1.5 * a, 0)
 ticket.height = h / 36
+clk_trial = core.Clock()
 
 if ok_data[3] == 'block1':
     # 指导语
@@ -232,8 +234,13 @@ if ok_data[3] == 'block1':
         core.wait(3)
         win.flip()
         core.wait(0.2)
+        too_long = 0
         for flag in range(2):
             myMouse.setVisible(1)
+            if too_long == 1:
+                too_long = 0
+                myMouse.setVisible(0)
+                break
             col = [0]*2
             col[0] = [x-k*(x-y)/5 for k in range(6)]
             if flag == 1:
@@ -241,7 +248,16 @@ if ok_data[3] == 'block1':
             col_p = col[flag]
             state = 'running'
             value = [[0 for i in range(3)] for i in range(7)]
+            clk_trial.reset()
             while True:
+                if clk_trial.getTime() > 10:
+                    if flag == 0:
+                        too_long = 1
+                    text_chaoshi.text = '超时！'
+                    text_chaoshi.draw()
+                    win.flip()
+                    core.wait(0.3)
+                    break
                 if state == 'running':
                     for i in range(1, 7):
                         for j in range(2):
@@ -339,9 +355,12 @@ for ii in range(len(df)):
     eye_used = getEYELINK().eyeAvailable()
     if eye_used == 1:
         getEYELINK().sendMessage("EYE_USED 1 RIGHT")
-    elif eye_used == 0 or eye_used == 2:
+    elif eye_used == 0:
         getEYELINK().sendMessage("EYE_USED 0 LEFT")
         eye_used = 0
+    elif eye_used == 2:
+        getEYELINK().sendMessage("EYE_USED 2 BINOCULAR")
+        eye_used = 2
     core.wait(0.1)
     startTime = currentTime()
     getEYELINK().sendMessage("SYNCTIME %d" % (currentTime() - startTime))
@@ -401,9 +420,16 @@ for ii in range(len(df)):
     parallel.setData(0)
     win.flip()
     core.wait(0.2)
+    too_long = 0
     # 选择
     for flag in range(2):
         myMouse.setVisible(1)
+        if too_long == 1:
+            result['upper'].append(-1)
+            result['lower'].append(-1)
+            too_long = 0
+            myMouse.setVisible(0)
+            break
         # 发送信号-选择
         parallel.setData(3)
         getEYELINK().sendMessage('Reward %s begin' % flag)
@@ -417,7 +443,21 @@ for ii in range(len(df)):
         value = [[0 for i in range(3)] for i in range(7)]
         clk.reset()
         clk2.reset()
+        clk_trial.reset()
         while True:
+            if clk_trial.getTime() > 10:
+                if flag == 0:
+                    result['first_upper'].append(-1)
+                    result['first_lower'].append(-1)
+                    too_long = 1
+                else:
+                    result['upper'].append(-1)
+                    result['lower'].append(-1)
+                text_chaoshi.text = '超时！'
+                text_chaoshi.draw()
+                win.flip()
+                core.wait(0.3)
+                break
             if state == 'running':
                 for i in range(1, 7):
                     for j in range(2):
