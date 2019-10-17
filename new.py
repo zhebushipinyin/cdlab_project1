@@ -175,6 +175,10 @@ fix = visual.ImageStim(win, image="dot.png", size=64 * h / 720)
 pic = visual.ImageStim(win, image="dot.png", size=(w, h))
 # 对号
 dui = visual.ImageStim(win, image="gou.png", size=32 * h / 720)
+ticket = visual.TextStim(win)
+ticket.text = u"奖券"
+ticket.pos = (-1.5 * a, 0)
+ticket.height = h / 36
 
 if ok_data[3] == 'block1':
     # 指导语
@@ -199,12 +203,8 @@ if ok_data[3] == 'block1':
     flag = 0
     x1 = 0
     y1 = 0
-    ticket = visual.TextStim(win)
-    ticket.text = u"奖券"
-    ticket.pos = (-1.5 * a, 0)
-    ticket.height = h / 36
     # 练习
-    for ii in [2, 56, 5, 8, 9]:
+    for ii in [2, 13, 5, 8, 9]:
         trial = df.loc[ii]
         p_v = trial['p']
         x = trial['x1']

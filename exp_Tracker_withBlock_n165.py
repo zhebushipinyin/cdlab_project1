@@ -314,6 +314,9 @@ for i in range(len(trial_set)):
         elif eye_used == LEFT_EYE or eye_used == BINOCULAR:
             getEYELINK().sendMessage("EYE_USED 0 LEFT")
             eye_used = LEFT_EYE
+        elif eye_used == BINOCULAR:
+            getEYELINK().sendMessage("EYE_USED 2 BINOCULAR")
+            eye_used = BINOCULAR
         core.wait(0.1)
         startTime = currentTime()
         getEYELINK().sendMessage("SYNCTIME %d" % (currentTime() - startTime))
