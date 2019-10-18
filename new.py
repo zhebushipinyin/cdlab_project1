@@ -185,7 +185,7 @@ clk_trial = core.Clock()
 if ok_data[3] == 'block1':
     # 指导语
     while True:
-        for i in range(3):
+        for i in range(4):
             pic.image = 'pic/introduction_%s'%(i+1)
             pic.draw()
             win.flip()
