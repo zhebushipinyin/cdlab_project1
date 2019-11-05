@@ -470,7 +470,7 @@ for ii in range(len(df)):
                         if myMouse.isPressedIn(table[i][j]) and value[i + 1][j] == 0:
                             clk_data['rt'].append(clk2.getTime())
                             clk_data['gamble'].append(i)
-                            clk_data['reward'].append(col_p[i - 1])
+                            clk_data['reward'].append(col_p[i])
                             clk_data['y'].append(j)
                             clk_data['p'].append(p_v)
                             clk_data['x1'].append(x)
@@ -489,9 +489,12 @@ for ii in range(len(df)):
                     table[0][j].t(mirror)
                     table[0][j].shape.draw()
                     table[0][j].txt.draw()
-                table[0][j].t(mirror)
-                table[0][j].shape.draw()
-                table[0][j].txt.draw()
+                jq_head.t(mirror)
+                table_jq.t(mirror)
+                jq_head.shape.draw()
+                table_jq.shape.draw()
+                jq_head.txt.draw()
+                table_jq.txt.draw()
                 key = event.getKeys(["escape"])
                 if "escape" in key:
                     state = "exit"
